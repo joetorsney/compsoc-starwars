@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div v-bind:key="p.name" v-for="p in planets">
-      <div @click="$emit('selected', p.name)" class="card">
-        <h3>{{p.name}}</h3>
+    <div v-bind:key="p" v-for="p in planets">
+      <div @click="$emit('selected', p)" class="card">
+        <h3>{{p}}</h3>
       </div>
     </div>
   </div>

@@ -7,7 +7,7 @@
       <section>
         <PlanetsSearch />
         <PlanetsList 
-          v-bind:planets="SWPlanets"
+          v-bind:planets="SWPNames"
           v-on:selected="SWPSelected"/>
       </section>
       <section>
@@ -35,7 +35,8 @@ export default {
   },
   data() {
     return {
-      SWPlanets: 'loading...',
+      SWPlanets: [], // Full planet data
+      SWPNames: ['loading'], // Just the names for the list.
       swText: "Hello"
     }
   },
@@ -47,7 +48,13 @@ export default {
       // Get just the first page for now.
       fetch("http://swapi.dev/api/planets/?search=&page=1")
       .then(resp => {return resp.json()})
-      .then(data => {this.SWPlanets = data.results})
+      .then(data => {
+        this.SWPlanets = data.results;
+        console.log(data.results)
+        this.SWPNames = data.results.map(
+          p => p.name
+        );
+      })
     },
     SWPSelected: function(name) {
       this.swText = name

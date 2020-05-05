@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-bind:key="p.name" v-for="p in planets">
-      <div @click="selected(p)" class="card">
+      <div @click="$emit('selected', p.name)" class="card">
         <h3>{{p.name}}</h3>
       </div>
     </div>
@@ -12,17 +12,11 @@
 export default {
     name: "PlanetsList",
     props: ["planets"],
-    methods: {
-      selected: function(p) {
-        console.log(p)
-        this.$parent.selected(p)
-      }
-    }
 }
 </script>
 
 <style scoped>
-.card:hover {
+.card:hover, .selected {
   background-color: #f3f3f3;
 }
 </style>

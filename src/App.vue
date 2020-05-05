@@ -1,15 +1,14 @@
 <template>
   <div id="app">
     <main>
-      <section class="wiki">
-        <h1>Welcome</h1>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. In cursus orci a lacinia gravida. Curabitur odio metus, porta in venenatis a, lobortis ac ante. Nullam sodales nec purus at laoreet. Quisque sollicitudin facilisis massa, ac rhoncus dolor faucibus nec. Vestibulum nec ante dapibus diam facilisis iaculis eu a augue. Quisque congue enim elit, eu faucibus ante laoreet a. Vestibulum vitae nunc id ex semper maximus. Phasellus sapien dui, iaculis facilisis nibh id, venenatis posuere risus. Donec vitae lectus tempor, rutrum eros nec, hendrerit enim. Proin eget congue est. Sed volutpat tempor eleifend. Vivamus quis leo vel mi volutpat sodales.
-        </p>
+      <section id="sw-wiki" class="wiki" v-bind:text="swText">
+        {{swText}}
       </section>
       <section>
         <PlanetsSearch />
-        <PlanetsList v-bind:planets="SWPlanets"/>
+        <PlanetsList 
+          v-bind:planets="SWPlanets"
+          v-on:selected="SWPSelected"/>
       </section>
       <section>
         <PlanetsList />
@@ -36,7 +35,8 @@ export default {
   },
   data() {
     return {
-      SWPlanets: ['loading...']
+      SWPlanets: 'loading...',
+      swText: "Hello"
     }
   },
   created() {
@@ -49,11 +49,9 @@ export default {
       .then(resp => {return resp.json()})
       .then(data => {this.SWPlanets = data.results})
     },
-    methods: {
-      selected: function(p) {
-        console.log(p.name)
-      }
-    }
+    SWPSelected: function(name) {
+      this.swText = name
+    },
   }
 }
 </script>

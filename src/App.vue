@@ -1,14 +1,24 @@
 <template>
   <div id="app">
     <main>
-      <section id="sw-wiki" class="wiki" v-bind:text="swText">
-        {{swText}}
+      <section id="sw-wiki" class="wiki" v-bind:data="swWikiData">
+        <h1>{{swWikiData.name}}</h1>
+        <p>
+        Climate: {{swWikiData.climate}} <br>
+        Terrain: {{swWikiData.terrain}} <br>
+        Popliation: {{swWikiData.population}} <br>
+        Diameter: {{swWikiData.diameter}} <br>
+        Gravity: {{swWikiData.gravity}} <br>
+        Orbital Period: {{swWikiData.orbital_period}} <br>
+        Rotation Period: {{swWikiData.rotation_period}} <br>
+        </p>
+        
       </section>
       <section>
         <PlanetsSearch />
         <PlanetsList 
-          v-bind:planets="SWPNames"
-          v-on:selected="SWPSelected"/>
+          v-bind:planets="swNames"
+          v-on:selected="swChangeWiki"/>
       </section>
       <section>
         <PlanetsList />
@@ -35,9 +45,9 @@ export default {
   },
   data() {
     return {
-      SWPlanets: [], // Full planet data
-      SWPNames: ['loading'], // Just the names for the list.
-      swText: "Hello"
+      swPlanets: [], // Full planet data
+      swNames: ['Planets loading...'], // Just the names for the list.
+      swWikiData: "Hello"
     }
   },
   created() {
@@ -49,15 +59,14 @@ export default {
       fetch("http://swapi.dev/api/planets/?search=&page=1")
       .then(resp => {return resp.json()})
       .then(data => {
-        this.SWPlanets = data.results;
-        console.log(data.results)
-        this.SWPNames = data.results.map(
+        this.swPlanets = data.results;
+        this.swNames = data.results.map(
           p => p.name
         );
       })
     },
-    SWPSelected: function(name) {
-      this.swText = name
+    swChangeWiki: function(name) {
+      this.swWikiData = this.swPlanets.filter(p => p.name == name)[0]
     },
   }
 }
@@ -81,6 +90,10 @@ main {
 section {
   width: 450px;
   overflow-y: scroll;
+}
+
+.wiki li {
+  list-style: none;
 }
 
 .wiki, .card {

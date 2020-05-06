@@ -24,9 +24,6 @@
         <PlanetsList />
       </section>
       <section class="wiki">
-        <p>
-          Lorem ipsum dolor sit amet, consplanetectetur adipiscing elit. In cursus orci a lacinia gravida. Curabitur odio metus, porta in venenatis a, lobortis ac ante. Nullam sodales nec purus at laoreet. Quisque sollicitudin facilisis massa, ac rhoncus dolor faucibus nec. Vestibulum nec ante dapibus diam facilisis iaculis eu a augue. Quisque congue enim elit, eu faucibus ante laoreet a. Vestibulum vitae nunc id ex semper maximus. Phasellus sapien dui, iaculis facilisis nibh id, venenatis posuere risus. Donec vitae lectus tempor, rutrum eros nec, hendrerit enim. Proin eget congue est. Sed volutpat tempor eleifend. Vivamus quis leo vel mi volutpat sodales.
-        </p>
       </section>
 
     </main>

@@ -33,6 +33,7 @@
 <script>
 import PlanetsList from './components/PlanetsList.vue'
 import PlanetsSearch from "./components/PlanetsSearch.vue";
+import { loadNasaData } from "./planetlib.js"
 
 export default {
   name: 'App',
@@ -49,6 +50,7 @@ export default {
   },
   created() {
     this.getSWPlanets();
+    loadNasaData();
   },
   methods: {
     getSWPlanets: function() {

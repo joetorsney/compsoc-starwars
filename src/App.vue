@@ -21,9 +21,10 @@
           v-on:selected="swChangeWiki"/>
       </section>
       <section>
-        <PlanetsList />
+        <PlanetsList v-bind:planets="exoNames"/>
       </section>
       <section class="wiki">
+        {{exoplanets}}
       </section>
 
     </main>
@@ -31,9 +32,11 @@
 </template>
 
 <script>
+import Papa from 'papaparse';
+
 import PlanetsList from './components/PlanetsList.vue'
 import PlanetsSearch from "./components/PlanetsSearch.vue";
-import { loadNasaData } from "./planetlib.js"
+import { nasaurl } from "./planetlib.js"
 
 export default {
   name: 'App',
@@ -45,13 +48,17 @@ export default {
     return {
       swPlanets: [], // Full planet data
       swNames: ['Planets loading...'], // Just the names for the list.
-      swWikiData: "Hello"
+      swWikiData: "Hello",
+      exoplanets: [], // Full exoplanet data
+      exoNames: ['Exoplanets loading...']
     }
   },
+
   created() {
     this.getSWPlanets();
-    loadNasaData();
+    this.getExoplanets();
   },
+
   methods: {
     getSWPlanets: function() {
       // Get just the first page for now.
@@ -63,6 +70,19 @@ export default {
           p => p.name
         );
       })
+    },
+    getExoplanets: function() {
+      Papa.parse(nasaurl, {
+        download: true,
+        complete: (results) => {
+          this.gotExoplanets(results);
+        }
+      });
+    },
+    gotExoplanets: function(results) {
+      console.log(results);
+      this.exoplanets = results
+      this.exoNames = results.data.slice(1, this.length).map(x => x[0])
     },
     swChangeWiki: function(name) {
       this.swWikiData = this.swPlanets.filter(p => p.name == name)[0]

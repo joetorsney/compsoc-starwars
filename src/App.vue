@@ -50,7 +50,7 @@ import Papa from 'papaparse';
 
 import PlanetsList from './components/PlanetsList.vue'
 import PlanetsSearch from "./components/PlanetsSearch.vue";
-import { nasaurl } from "./planetlib.js"
+import { nasaurl, swPlanetToArray } from "./planetlib.js"
 
 export default {
   name: 'App',
@@ -101,10 +101,14 @@ export default {
     },
     swChangeWiki: function(name) {
       this.swWikiData = this.swPlanets.filter(p => p.name == name)[0]
+      console.log(swPlanetToArray(this.swWikiData));
+      // let I = matchPlanets(
+      //   swPlanetToArray(this.swWikiData), this.exoplanetsArray)
+      // console.log(I);
     },
     exoChangeWiki: function(name) {
       this.exoWikiData = this.exoplanets.filter(p => p[0] == name)[0]
-    }
+    },
   }
 }
 </script>

@@ -4,13 +4,13 @@
       <section id="sw-wiki" class="wiki" v-bind:data="swWikiData">
         <h1>{{swWikiData.name}}</h1>
         <p>
-        Climate: {{swWikiData.climate}} <br>
-        Terrain: {{swWikiData.terrain}} <br>
-        Popliation: {{swWikiData.population}} <br>
-        Diameter: {{swWikiData.diameter}} <br>
-        Gravity: {{swWikiData.gravity}} <br>
-        Orbital Period: {{swWikiData.orbital_period}} <br>
-        Rotation Period: {{swWikiData.rotation_period}} <br>
+        Climate: <span>{{swWikiData.climate}}</span> <br>
+        Terrain: <span>{{swWikiData.terrain}}</span> <br>
+        Popliation: <span>{{swWikiData.population}}</span> <br>
+        Diameter: <span>{{swWikiData.diameter}}</span> <br>
+        Gravity: <span>{{swWikiData.gravity}}</span> <br>
+        Orbital Period: <span>{{swWikiData.orbital_period}}</span> <br>
+        Rotation Period: <span>{{swWikiData.rotation_period}}</span> <br>
         </p>
         
       </section>
@@ -21,10 +21,24 @@
           v-on:selected="swChangeWiki"/>
       </section>
       <section>
-        <PlanetsList v-bind:planets="exoNames"/>
+        <PlanetsList 
+          v-bind:planets="exoNames"
+          v-on:selected="exoChangeWiki"/>
       </section>
       <section class="wiki">
-        {{exoplanets}}
+        <h1>{{exoWikiData[0]}}</h1>
+        Discovery Method: <span>{{exoWikiData[1]}}</span><br>
+        Number of planets in system: <span>{{exoWikiData[2]}}</span><br>
+        Orbital Period (years): <span>{{exoWikiData[3]}}</span><br>
+        Planet Mass (Jupiters): <span>{{exoWikiData[7]}}</span><br>
+        Planet Radius (Jupiters): <span>{{exoWikiData[8]}}</span><br>
+        Distance from Earth (parsecs): <span>{{exoWikiData[9]}}</span><br>
+        Star Effective Temperature (K): <span>{{exoWikiData[10]}}</span> <br>
+        Discovery Date: <span>{{exoWikiData[11]}}</span> <br>
+        Discovery Facility <span>{{exoWikiData[12]}}</span> <br><br>
+        More Information: <br> 
+        <a v-bind:href="exoWikiData[13]">Exoplanet Catalog</a> <br> 
+        <a v-bind:href="exoWikiData[14]">Exoplanet Data Visualiser</a> <br> 
       </section>
 
     </main>
@@ -48,9 +62,10 @@ export default {
     return {
       swPlanets: [], // Full planet data
       swNames: ['Planets loading...'], // Just the names for the list.
-      swWikiData: "Hello",
+      swWikiData: "", // Data to be displayed in the sw wiki.
       exoplanets: [], // Full exoplanet data
-      exoNames: ['Exoplanets loading...']
+      exoNames: ['Exoplanets loading...'],
+      exoWikiData: "" // Data to be displayed in the exoplanet wiki.
     }
   },
 
@@ -81,12 +96,15 @@ export default {
     },
     gotExoplanets: function(results) {
       console.log(results);
-      this.exoplanets = results
-      this.exoNames = results.data.slice(1, this.length).map(x => x[0])
+      this.exoplanets = results.data
+      this.exoNames = this.exoplanets.slice(1, this.length).map(x => x[0])
     },
     swChangeWiki: function(name) {
       this.swWikiData = this.swPlanets.filter(p => p.name == name)[0]
     },
+    exoChangeWiki: function(name) {
+      this.exoWikiData = this.exoplanets.filter(p => p[0] == name)[0]
+    }
   }
 }
 </script>
@@ -117,6 +135,10 @@ section {
 
 .wiki, .card {
   padding: 20px;
+}
+
+.wiki span {
+  float: right;
 }
 
 .card {

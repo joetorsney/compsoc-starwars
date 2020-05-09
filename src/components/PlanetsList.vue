@@ -2,7 +2,7 @@
   <div>
     <div v-bind:key="p" v-for="p in planets">
       <div @click="$emit('selected', p)" class="card">
-        <h3>{{p}}</h3>
+        <h2>{{p}}</h2>
       </div>
     </div>
   </div>
@@ -16,7 +16,7 @@ export default {
 </script>
 
 <style scoped>
-.card:hover, .selected {
-  background-color: #f3f3f3;
+.card:hover,  .selected {
+  background-color: lightgrey;
 }
 </style>

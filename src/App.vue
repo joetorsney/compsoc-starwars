@@ -88,12 +88,18 @@ export default {
 
   methods: {
     getSWPlanets: function() {
-      // Get just the first page for now.
-      fetch("http://swapi.dev/api/planets/?search=&page=1")
-      .then(resp => {return resp.json()})
+      let apiPromises = []
+      for (let i = 1; i <= 6; i++) {
+        apiPromises.push(
+          fetch("http://swapi.dev/api/planets/?search=&page="+i)
+          .then(response => response.json())
+        )
+      }
+
+      Promise.all(apiPromises)
       .then(data => {
-        this.swPlanets = data.results;
-        this.swNames = data.results.map(
+        this.swPlanets = data.map(d => d.results).flat()
+        this.swNames = this.swPlanets.map(
           p => p.name
         );
         this.swNamesFiltered = this.swNames;
@@ -124,7 +130,6 @@ export default {
         this.exoMatrix,
         5
       ) 
-
       // get the names of the closest
       this.exoNames = closestIndices.map(i => this.exoplanets[i][0]);       
     },

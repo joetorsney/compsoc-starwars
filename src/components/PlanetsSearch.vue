@@ -1,6 +1,5 @@
 <template>
   <div class="card">
-    <h1>Star Wars Planets</h1>
     
   </div>
 </template>

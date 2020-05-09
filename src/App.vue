@@ -14,16 +14,23 @@
         </p>
         
       </section>
-      <section>
-        <PlanetsSearch />
+      <section class="list-section">
+        <div class="section-header">
+          <h1>Star Wars Planets</h1>
+            <input type="text" v-model="swSearch" @keyup="filterSwNames" placeholder="Filter planets..."/>
+        </div>
         <PlanetsList 
-          v-bind:planets="swNames"
-          v-on:selected="swChangeWiki"/>
+          v-bind:planets="swNamesFiltered"
+          v-on:selected="swPlanetSelected"/>
       </section>
-      <section>
+      <section class="list-section">
+        <div class="section-header">
+          <h1>Matching Exoplanets</h1>
+          <p>{{exoMsg}}</p>
+        </div>
         <PlanetsList 
           v-bind:planets="exoNames"
-          v-on:selected="exoChangeWiki"/>
+          v-on:selected="exoplanetSelected"/>
       </section>
       <section class="wiki">
         <h1>{{exoWikiData[0]}}</h1>
@@ -50,24 +57,27 @@ import Papa from 'papaparse';
 // import numjs from 'numjs';
 
 import PlanetsList from './components/PlanetsList.vue'
-import PlanetsSearch from "./components/PlanetsSearch.vue";
 import { nasaurl, buildExoMatrix, swPlanetToArray, matchPlanets } from "./planetlib.js"
 
 export default {
   name: 'App',
   components: {
     PlanetsList,
-    PlanetsSearch
   },
   data() {
     return {
       swPlanets: [], // Full Star Wars planet data
-      swNames: ['Planets loading...'], // List of names to display.
+      swNames: [], // List of names to display.
+      swNamesFiltered: [],
       swWikiData: "", // Data to be displayed in the sw wiki.
+      swSearch: "",
       exoplanets: [], // Full exoplanet data
-      exoNames: ['Exoplanets loading...'], // List of names to display
+      exoNames: [], // List of names to display
       exoWikiData: "", // Data to be displayed in the exoplanet wiki.
-      exoMatrix: null // A matrix of numeric data for the exoplanets.
+      exoMatrix: null, // A matrix of numeric data for the exoplanets.
+
+      // Displays the status of fetching exoplanet data.
+      exoMsg: "Fetching exoplanet data..."
     }
   },
 
@@ -86,9 +96,11 @@ export default {
         this.swNames = data.results.map(
           p => p.name
         );
+        this.swNamesFiltered = this.swNames;
       })
     },
     getExoplanets: function() {
+      // Fetch all the exoplanets from nasa api
       Papa.parse(nasaurl, {
         download: true,
         complete: (results) => {
@@ -97,12 +109,13 @@ export default {
       });
     },
     gotExoplanets: function(data) {
+      // When we get them, remove the header row
       data = data.slice(1, this.length)
-      this.exoplanets = data
-      this.exoNames = data.map(x => x[0])
-      this.exoMatrix = buildExoMatrix(data)
+      this.exoplanets = data // Then keep the full data...
+      this.exoMatrix = buildExoMatrix(data) // ...and numeric data.
+      this.exoMsg = "Ready. Select a star wars planet to see it's closest matches!"
     },
-    swChangeWiki: function(name) {
+    swPlanetSelected: function(name) {
       this.swWikiData = this.swPlanets.filter(p => p.name == name)[0]
 
       // get the indices of 5 closest exoplanets
@@ -115,9 +128,14 @@ export default {
       // get the names of the closest
       this.exoNames = closestIndices.map(i => this.exoplanets[i][0]);       
     },
-    exoChangeWiki: function(name) {
+    exoplanetSelected: function(name) {
       this.exoWikiData = this.exoplanets.filter(p => p[0] == name)[0]
     },
+    filterSwNames() {
+      this.swNamesFiltered = this.swNames.filter(p => {
+        return p.toLowerCase().includes(this.swSearch.toLowerCase())
+      })
+    }
   }
 }
 </script>
@@ -142,11 +160,15 @@ section {
   overflow-y: scroll;
 }
 
+.section-header {
+  height: 100px;
+}
+
 .wiki li {
   list-style: none;
 }
 
-.wiki, .card {
+.wiki, .card, .section-header {
   padding: 20px;
 }
 

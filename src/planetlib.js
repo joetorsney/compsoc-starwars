@@ -55,17 +55,15 @@ export function swPlanetToArray(swp) {
 }
 
 /**
- * Returns the indices of the 5 closest matching exoplanents
+ * Returns the indices of the n closest matching exoplanents
  * to the given starwars planet. (Euclidean distance)
  * This is super slow (using arrays) and should really be using
  * something like numjs, or mathjs for matrix algebra. Neither of
  * these librares were as easy to work with as numpy.
  * 
  * (Even with 4500 exoplanets it's still fast enough :))
- * @param {*} swplanet 
- * @param {*} exoplanets 
  */
-export function matchPlanets(swplanet, exoplanets) {
+export function matchPlanets(swplanet, exoplanets, n) {
     let D = []; // D[i] is the distance from swplanet to exoplanets[i]
 
     for (let i = 0; i < exoplanets.length; i++) {
@@ -76,6 +74,14 @@ export function matchPlanets(swplanet, exoplanets) {
             Math.pow((e[2] - swplanet[2]), 2)
         );
     }
+
+    // I know I don't have to sort the whole thing but cba,
+    // this is a proof of concept lol
+    // Using Decorate-Sort-Undecorate to get the indices of the n smallest 
+    let sorted = D
+        .map((value, index) => [value, index]) // add index associated with value
+        .sort(([value1], [value2]) => value1 - value2) // sort by value ascending
+        .map(([, index]) => index); // extract the indices of sorted values
     
-    return D;
+    return sorted.slice(0, n);
 }

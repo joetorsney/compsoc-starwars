@@ -61,11 +61,11 @@ export default {
   },
   data() {
     return {
-      swPlanets: [], // Full planet data
-      swNames: ['Planets loading...'], // Just the names for the list.
+      swPlanets: [], // Full Star Wars planet data
+      swNames: ['Planets loading...'], // List of names to display.
       swWikiData: "", // Data to be displayed in the sw wiki.
       exoplanets: [], // Full exoplanet data
-      exoNames: ['Exoplanets loading...'],
+      exoNames: ['Exoplanets loading...'], // List of names to display
       exoWikiData: "", // Data to be displayed in the exoplanet wiki.
       exoMatrix: null // A matrix of numeric data for the exoplanets.
     }
@@ -104,8 +104,16 @@ export default {
     },
     swChangeWiki: function(name) {
       this.swWikiData = this.swPlanets.filter(p => p.name == name)[0]
-      let a = swPlanetToArray(this.swWikiData)
-      console.log(matchPlanets(a, this.exoMatrix))
+
+      // get the indices of 5 closest exoplanets
+      let closestIndices = matchPlanets(
+        swPlanetToArray(this.swWikiData), 
+        this.exoMatrix,
+        5
+      ) 
+
+      // get the names of the closest
+      this.exoNames = closestIndices.map(i => this.exoplanets[i][0]);       
     },
     exoChangeWiki: function(name) {
       this.exoWikiData = this.exoplanets.filter(p => p[0] == name)[0]

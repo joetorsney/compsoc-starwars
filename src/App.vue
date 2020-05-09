@@ -47,10 +47,11 @@
 
 <script>
 import Papa from 'papaparse';
+// import numjs from 'numjs';
 
 import PlanetsList from './components/PlanetsList.vue'
 import PlanetsSearch from "./components/PlanetsSearch.vue";
-import { nasaurl, swPlanetToArray } from "./planetlib.js"
+import { nasaurl, buildExoMatrix, swPlanetToArray, matchPlanets } from "./planetlib.js"
 
 export default {
   name: 'App',
@@ -65,7 +66,8 @@ export default {
       swWikiData: "", // Data to be displayed in the sw wiki.
       exoplanets: [], // Full exoplanet data
       exoNames: ['Exoplanets loading...'],
-      exoWikiData: "" // Data to be displayed in the exoplanet wiki.
+      exoWikiData: "", // Data to be displayed in the exoplanet wiki.
+      exoMatrix: null // A matrix of numeric data for the exoplanets.
     }
   },
 
@@ -90,21 +92,20 @@ export default {
       Papa.parse(nasaurl, {
         download: true,
         complete: (results) => {
-          this.gotExoplanets(results);
+          this.gotExoplanets(results.data);
         }
       });
     },
-    gotExoplanets: function(results) {
-      console.log(results);
-      this.exoplanets = results.data
-      this.exoNames = this.exoplanets.slice(1, this.length).map(x => x[0])
+    gotExoplanets: function(data) {
+      data = data.slice(1, this.length)
+      this.exoplanets = data
+      this.exoNames = data.map(x => x[0])
+      this.exoMatrix = buildExoMatrix(data)
     },
     swChangeWiki: function(name) {
       this.swWikiData = this.swPlanets.filter(p => p.name == name)[0]
-      console.log(swPlanetToArray(this.swWikiData));
-      // let I = matchPlanets(
-      //   swPlanetToArray(this.swWikiData), this.exoplanetsArray)
-      // console.log(I);
+      let a = swPlanetToArray(this.swWikiData)
+      console.log(matchPlanets(a, this.exoMatrix))
     },
     exoChangeWiki: function(name) {
       this.exoWikiData = this.exoplanets.filter(p => p[0] == name)[0]

@@ -81,8 +81,6 @@
 
 <script>
 import Papa from 'papaparse';
-// import numjs from 'numjs';
-
 import PlanetsList from './components/PlanetsList.vue'
 import { nasaurl, buildExoMatrix, swPlanetToArray, matchPlanets } from "./planetlib.js"
 
@@ -116,7 +114,7 @@ export default {
       let apiPromises = []
       for (let i = 1; i <= 6; i++) {
         apiPromises.push(
-          fetch("http://swapi.dev/api/planets/?search=&page="+i)
+          fetch("https://swapi.dev/api/planets/?search=&page="+i)
           .then(response => response.json())
         )
       }
